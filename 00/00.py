@@ -1,5 +1,7 @@
 from PIL import Image, ImageFont, ImageDraw
 
+image_address='qqhead.jpg'
+input_num='6'
 
 def add_num(img,num):
     "输入图像与数字文本"
@@ -15,6 +17,6 @@ def add_num(img,num):
 
 if __name__ == '__main__':
 
-    image=Image.open('qqhead.jpg')
-    #input_num=str(6)
-    add_num(image,'6')
+    image=Image.open(image_address)
+
+    add_num(image,input_num)
