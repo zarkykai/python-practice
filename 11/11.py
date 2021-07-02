@@ -1,9 +1,9 @@
-
-filename='filtered_words.txt'
+file_dir='filtered_words.txt'
 outstr='human rights'
 words=[]
+
 #load filtered_word.txt
-with open(filename, 'r', encoding='utf8') as file:
+with open(file_dir, 'r', encoding='utf8') as file:
     wordlist= file.readlines()
     for word in wordlist:
         word=word.strip()       #去除尾部的换行符

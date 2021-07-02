@@ -1,23 +1,21 @@
+filename = 'filtered_words.txt'
+words = []
 
-filename='filtered_words.txt'
-
-words=[]
-#load filtered_word.txt
+# load filtered_word.txt
 with open(filename, 'r', encoding='utf8') as file:
-    wordlist= file.readlines()
+    wordlist = file.readlines()
     for word in wordlist:
-        word=word.strip()       #去除尾部的换行符
+        word = word.strip()  # 去除尾部的换行符
         words.append(word)
     print(words)
 
-#input
-iptstr=input('please input something:')
+# input
+iptstr = input('please input something:')
 outstr = iptstr
 
-#search
+# search
 for word in words:
-    if iptstr.find(word)!=-1:
-        outstr=outstr.replace(word,'**')
-
+    if iptstr.find(word) != -1:
+        outstr = outstr.replace(word, '**')
 
 print(outstr)
