@@ -2,7 +2,6 @@
 step=3
 total = 10
 list=[]
-death_list=[]
 begin_person=0
 #recursion
 '''
@@ -37,8 +36,8 @@ class person:
         self.id = new_id
         return None
 
-
 def death_order(input_list,step,start_person):
+    death_list = []
     list_copy = input_list.copy()
     rem = len(list_copy)
 ################输入检查
@@ -63,14 +62,18 @@ def death_order(input_list,step,start_person):
     return death_list
 
 if __name__ == '__main__':
-#生成一个列表,测试数据为for循环生成，total应小于60
+    '''
+    生成测试列表,测试数据为for循环生成，total应小于60
+    实际应用中，应考虑到名字为中文字符的编码问题，id为长数字应转换成字符串处理
+    '''
     for num in range(total):
-        a = person(name = chr(65 + num),id = num)  #名字为A,B,C,……id为0,1,2……
+        a = person(name = chr(65 + num),id = num)  #测试生成名字为A,B,C,……id为0,1,2……
         list.append(a)
 
 
 
     for x in list:
         print("name:",x.name,"id:",x.id)
-    for y in death_order(list,step,begin_person):
+    death_list = death_order(list,step,begin_person)
+    for y in death_list:
         print("name:",y.name,"id:",y.id)
