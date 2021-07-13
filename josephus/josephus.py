@@ -1,24 +1,16 @@
 #find josephus out of n people when kill one out of every q people
-step=3
-total = 10
-list=[]
-begin_person=0
-#recursion
-'''
-def find_josephus(n,q):
-    if n==1:
-        alive_one = 0
-    else:
-        alive_one = (find_josephus(n-1,q)+q) % n
-    return alive_one
+import csv
+from openpyxl import load_workbook
+import zipfile
 
-#iteration
-def find_josephus2(n,q):
-    alive_one=0
-    for i in range(n):
-        alive_one = (alive_one + q)%(i+1)
-    return alive_one
-'''
+EMPTY = ['',None]
+
+zip_fdir = 'ADcarry_xlsx.zip'
+csv_fdir = 'ADcarry/ADcarry.csv'
+excel_fdir = 'ADcarry/ADcarry.xlsx'
+
+step=3
+begin_person='卡莎'
 
 class person:
     name='none'
@@ -36,23 +28,108 @@ class person:
         self.id = new_id
         return None
 
-def death_order(input_list,step,start_person):
+#基类，功能：清空空白项
+class Reader:
+    def __init__(self):
+        pass
+
+    def clean_blank(self,list_temp):#清理列表中的空行
+        while 1:
+            i = 0
+            for x in list_temp:
+                if (x.name in EMPTY)|(x.id in EMPTY) :# 等价于if (x.name == '') | (x.id == '')|(x.name == None) | (x.id == None):
+                    i = 1
+                    list_temp.remove(x)
+            if i == 0:
+                break
+        return None
+
+class ExcelReader(Reader):
+    fdir = ''
+    def __init__(self,file_dir):
+        self.fdir = file_dir
+
+    def read_excel(self):
+        wb = load_workbook(filename=self.fdir)
+        ws = wb.active
+        list = []
+
+        for row in ws.iter_rows():  # 循环读取每一行
+            a = person(name=row[0].value, id=row[1].value)  # 每一行的第一列为名字，第二列为学号，创建对象进行存储
+            list.append(a)
+
+        self.clean_blank(list)
+
+        return list
+
+class CsvReader(Reader):
+    fdir = ''
+    def __init__(self,file_dir):
+        self.fdir = file_dir
+
+    def read_csv(self):
+        with open(self.fdir, newline='', encoding='utf-8')as f:
+            f_csv = csv.reader(f)
+            list = []
+
+            for row in f_csv:  # 循环读取每行
+                a = person(name=row[0], id=row[1])  # 创建对象存储数据
+                list.append(a)
+
+        self.clean_blank(list)
+
+        return list
+
+class ZipReader(ExcelReader,CsvReader):
+    fdir = ''
+    def __init__(self,file_dir):
+        self.fdir = file_dir
+
+    def read_zip(self):
+        with zipfile.ZipFile(self.fdir) as zfiles:
+            namelist = zfiles.namelist()
+            self.fdir = namelist[0]  # 获取压缩包内文件名
+            list = []
+
+            zfiles.extractall()  # 解压
+
+            # 根据文件类型选择不同方法打开文件
+            if self.fdir.endswith('csv'):
+                list = self.read_csv()
+            elif self.fdir.endswith('xls') | self.fdir.endswith('xlsx'):
+                list = self.read_excel()
+            else:
+                raise Exception('undefined file type')
+
+        return list
+
+def death_order(input_list, step, start_person ):
     death_list = []
     list_copy = input_list.copy()
     rem = len(list_copy)
-################输入检查
+
+################输入检查，输入的起始位置是否在列表中
     start_point = -1
     for x in list_copy:
         if x.name == start_person:
             start_point = list_copy.index(x)
-            print('start person founded')
+            print('\033[0;32;40m\t start person founded \033[0m')
 
     if start_point == -1:
-        start_point = 0
-        print('start person not founded, the start person will be set to the first one')
-#################遍历运算
+        start_point = 0             #若列表中没有找到输入的起始值，则将起始值置为0
+        print('\033[0;31;40m\t start person not founded, the start person has been set to the first one \033[0m')
+#################
+    assert start_point >= 0
     for counter in range(len(list_copy)):
-        out_point = (start_point -1 + step )%rem
+        assert step != 0
+        '''判断输入的步长的正负-----------------------'''
+        if step > 0:
+            out_point = (start_point -1 + step )%rem
+
+        if step < 0:
+            out_point = (start_point + 1 + step) % rem
+        '''-----------------------------------------------'''
+
         death_list.append(list_copy[out_point])
         del list_copy[out_point]
 
@@ -61,19 +138,19 @@ def death_order(input_list,step,start_person):
 
     return death_list
 
+
 if __name__ == '__main__':
-    '''
-    生成测试列表,测试数据为for循环生成，total应小于60
-    实际应用中，应考虑到名字为中文字符的编码问题，id为长数字应转换成字符串处理
-    '''
-    for num in range(total):
-        a = person(name = chr(65 + num),id = num)  #测试生成名字为A,B,C,……id为0,1,2……
-        list.append(a)
+    #调用不同的Reader进行文件读取
+    # list = ExcelReader(excel_fdir).read_excel()
+    list = CsvReader(csv_fdir).read_csv()
+    # list = ZipReader(zip_fdir).read_zip()
 
-
-
+    #文件读取结果打印
     for x in list:
         print("name:",x.name,"id:",x.id)
+
+#josephus排序并打印
     death_list = death_order(list,step,begin_person)
+    print('\033[0;32;40m\t the death order is: \033[0m')
     for y in death_list:
         print("name:",y.name,"id:",y.id)
