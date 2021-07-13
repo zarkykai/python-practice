@@ -1,0 +1,66 @@
+#函数实现
+def get_data_from_excel(ipt_excel_dir):
+    wb = load_workbook(filename = ipt_excel_dir)
+    ws = wb.active
+    list = []
+
+    for row in ws.iter_rows():                                      #循环读取每一行
+        a = person(name = row[0].value,id = row[1].value)           #每一行的第一列为名字，第二列为学号，创建对象进行存储
+        if a.name !=None & a.id !=None:
+            list.append(a)
+
+####################
+    '''清除空白项'''
+    # while 1:
+    #     i = 0
+    #     for x in list:
+    #         if (x.name == None) | (x.id == None):
+    #             i = 1
+    #             del list[list.index(x)]
+    #     if i == 0:
+    #         break
+    # reader.clean_blank(list)
+###################
+
+    wb.close()
+    return list
+
+def get_data_from_csv(ipt_csv_dir):
+    with open(ipt_csv_dir, newline='',encoding='utf-8')as f:
+        f_csv = csv.reader(f)
+
+        for row in f_csv:                           #循环读取每行
+            a = person(name=row[0], id=row[1])      #创建对象存储数据
+            list.append(a)
+    ########################
+    '''清除掉列表中的空白项'''
+    while 1:
+        i = 0
+        for x in list:
+            if (x.name == '') | (x.id == ''):
+                i = 1
+                del list[list.index(x)]
+        if i == 0:
+            break
+    ########################
+    return list
+
+def get_data_from_zip(ipt_zip_dir):
+    '''
+    解压，搜索后缀确认打开方式，打开文件并读取数据，返回列表
+    ps:默认zip内仅一个文件，若压缩包包含多个文件则可能无法正确读取
+    '''
+    with zipfile.ZipFile(ipt_zip_dir) as zfiles:
+        namelist = zfiles.namelist()
+        innerfile_name = namelist[0]   #获取压缩包内文件名
+
+        zfiles.extractall() #解压
+        #根据后缀选择不同函数打开文件
+        if innerfile_name.endswith('csv'):
+            list = get_data_from_csv(innerfile_name)
+        elif innerfile_name.endswith('xls')|innerfile_name.endswith('xlsx'):
+            list = get_data_from_excel(innerfile_name)
+        else:
+            print('undefined file type')
+
+    return list
