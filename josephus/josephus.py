@@ -5,16 +5,14 @@ import zipfile
 
 EMPTY = ['',None]
 
-zip_fdir = 'ADcarry_xlsx.zip'
-csv_fdir = 'ADcarry/ADcarry.csv'
-excel_fdir = 'ADcarry/ADcarry.xlsx'
+ZIPPATH = 'ADcarry_xlsx.zip'
+CSVPATH = 'ADcarry/ADcarry.csv'
+EXCELPATH = 'ADcarry/ADcarry.xlsx'
 
 step=3
-begin_person='卡莎'
+BeginPerson='卡莎'
 
 class person:
-    name='none'
-    id = 'none'
 
     def __init__(self,name = 'none',id = 'none'):
         self.name = name
@@ -33,7 +31,7 @@ class Reader:
     def __init__(self):
         pass
 
-    def clean_blank(self,list_temp):#清理列表中的空行
+    def clean_blank(self, list_temp):#清理列表中的空行
         while 1:
             i = 0
             for x in list_temp:
@@ -63,8 +61,8 @@ class ExcelReader(Reader):
         return list
 
 class CsvReader(Reader):
-    fdir = ''
-    def __init__(self,file_dir):
+    fdir
+    def __init__(self, file_dir):
         self.fdir = file_dir
 
     def read_csv(self):
@@ -103,12 +101,12 @@ class ZipReader(ExcelReader,CsvReader):
 
         return list
 
-def death_order(input_list, step, start_person ):
+def get_death_order(input_list, step, start_person ):   #需要将其写成类
     death_list = []
     list_copy = input_list.copy()
     rem = len(list_copy)
 
-################输入检查，输入的起始位置是否在列表中
+################输入检查，起始位置是否在列表中
     start_point = -1
     for x in list_copy:
         if x.name == start_person:
@@ -116,7 +114,7 @@ def death_order(input_list, step, start_person ):
             print('\033[0;32;40m\t start person founded \033[0m')
 
     if start_point == -1:
-        start_point = 0             #若列表中没有找到输入的起始值，则将起始值置为0
+        start_point = 0             #若列表中没有找起始值，则将起始值置为0
         print('\033[0;31;40m\t start person not founded, the start person has been set to the first one \033[0m')
 #################
     assert start_point >= 0
@@ -138,6 +136,22 @@ def death_order(input_list, step, start_person ):
 
     return death_list
 
+class josephus():
+
+    def __init__(self, ipt_list_, step_, start_person_):
+        self.list = ipt_list_
+        self.step = step_
+        self.start_person
+
+
+
+    def __iter__(self):
+
+        return
+
+    def __next__(self):
+
+        return
 
 if __name__ == '__main__':
     #调用不同的Reader进行文件读取
@@ -150,7 +164,7 @@ if __name__ == '__main__':
         print("name:",x.name,"id:",x.id)
 
 #josephus排序并打印
-    death_list = death_order(list,step,begin_person)
+    DeathList = get_death_order(list,step,BeginPerson)
     print('\033[0;32;40m\t the death order is: \033[0m')
-    for y in death_list:
+    for y in DeathList:
         print("name:",y.name,"id:",y.id)
