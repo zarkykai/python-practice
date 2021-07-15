@@ -2,25 +2,9 @@ import csv
 from openpyxl import load_workbook
 import zipfile
 from abc import ABC, abstractmethod
+import Person
 
 EMPTY = ['', None]
-
-
-class Person:
-    name = 'none'
-    id = 'none'
-
-    def __init__(self, name='none', id='none'):
-        self.name = name
-        self.id = id
-
-    def change_name_to(self,new_name):
-        self.name = new_name
-        return None
-
-    def change_id_to(self, new_id):
-        self.id = new_id
-        return None
 
 
 class Reader(ABC):
@@ -72,7 +56,7 @@ class CsvReader(Reader):
             list = []
 
             for row in f_csv:  # 循环读取每行
-                a = Person(name=row[0], id=row[1])  # 创建对象存储数据
+                a = Person.Person(name=row[0], id=row[1])  # 创建对象存储数据
                 list.append(a)
 
         self.clean_blank(list)

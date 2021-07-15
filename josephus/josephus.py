@@ -1,112 +1,21 @@
 #find josephus out of n people when kill one out of every q people
-import csv
-from openpyxl import load_workbook
-import zipfile
+import Reader       #文件读取方法以及Person类存储在自定义的Reader模块中
 
-EMPTY = ['',None]
+ZIPPATH = 'ADcarry.zip'
+ZIP_TARGET_FILE = 'ADcarry/ADcarry.csv'
+CSVPATH = 'ADcarry2/ADcarry.csv'
+EXCELPATH = 'ADcarry2/ADcarry.xlsx'
 
-ZIPPATH = 'ADcarry_xlsx.zip'
-CSVPATH = 'ADcarry/ADcarry.csv'
-EXCELPATH = 'ADcarry/ADcarry.xlsx'
+STEP=3
+begin_person='卡莎'
 
-step=3
-BeginPerson='卡莎'
-
-class person:
-
-    def __init__(self,name = 'none',id = 'none'):
-        self.name = name
-        self.id = id
-
-    def change_name_to(self,new_name):
-        self.name = new_name
-        return None
-
-    def change_id_to(self,new_id):
-        self.id = new_id
-        return None
-
-#基类，功能：清空空白项
-class Reader:
-    def __init__(self):
-        pass
-
-    def clean_blank(self, list_temp):#清理列表中的空行
-        while 1:
-            i = 0
-            for x in list_temp:
-                if (x.name in EMPTY)|(x.id in EMPTY) :# 等价于if (x.name == '') | (x.id == '')|(x.name == None) | (x.id == None):
-                    i = 1
-                    list_temp.remove(x)
-            if i == 0:
-                break
-        return None
-
-class ExcelReader(Reader):
-    fdir = ''
-    def __init__(self,file_dir):
-        self.fdir = file_dir
-
-    def read_excel(self):
-        wb = load_workbook(filename=self.fdir)
-        ws = wb.active
-        list = []
-
-        for row in ws.iter_rows():  # 循环读取每一行
-            a = person(name=row[0].value, id=row[1].value)  # 每一行的第一列为名字，第二列为学号，创建对象进行存储
-            list.append(a)
-
-        self.clean_blank(list)
-
-        return list
-
-class CsvReader(Reader):
-    fdir
-    def __init__(self, file_dir):
-        self.fdir = file_dir
-
-    def read_csv(self):
-        with open(self.fdir, newline='', encoding='utf-8')as f:
-            f_csv = csv.reader(f)
-            list = []
-
-            for row in f_csv:  # 循环读取每行
-                a = person(name=row[0], id=row[1])  # 创建对象存储数据
-                list.append(a)
-
-        self.clean_blank(list)
-
-        return list
-
-class ZipReader(ExcelReader,CsvReader):
-    fdir = ''
-    def __init__(self,file_dir):
-        self.fdir = file_dir
-
-    def read_zip(self):
-        with zipfile.ZipFile(self.fdir) as zfiles:
-            namelist = zfiles.namelist()
-            self.fdir = namelist[0]  # 获取压缩包内文件名
-            list = []
-
-            zfiles.extractall()  # 解压
-
-            # 根据文件类型选择不同方法打开文件
-            if self.fdir.endswith('csv'):
-                list = self.read_csv()
-            elif self.fdir.endswith('xls') | self.fdir.endswith('xlsx'):
-                list = self.read_excel()
-            else:
-                raise Exception('undefined file type')
-
-        return list
-
-def get_death_order(input_list, step, start_person ):   #需要将其写成类
+#函数实现约瑟夫环
+def get_death_order(input_list, step, start_person ):
     death_list = []
     list_copy = input_list.copy()
     rem = len(list_copy)
 
-################输入检查，起始位置是否在列表中
+################输入检查，输入的起始位置是否在列表中
     start_point = -1
     for x in list_copy:
         if x.name == start_person:
@@ -114,7 +23,7 @@ def get_death_order(input_list, step, start_person ):   #需要将其写成类
             print('\033[0;32;40m\t start person founded \033[0m')
 
     if start_point == -1:
-        start_point = 0             #若列表中没有找起始值，则将起始值置为0
+        start_point = 0             #若列表中没有找到输入的起始值，则将起始值置为0
         print('\033[0;31;40m\t start person not founded, the start person has been set to the first one \033[0m')
 #################
     assert start_point >= 0
@@ -136,35 +45,65 @@ def get_death_order(input_list, step, start_person ):   #需要将其写成类
 
     return death_list
 
-class josephus():
+#使用迭代器类实现约瑟夫环
+class JosephusRing():
 
-    def __init__(self, ipt_list_, step_, start_person_):
-        self.list = ipt_list_
-        self.step = step_
-        self.start_person
+    def __init__(self, ipt_list = [], step = 0, start_person = ''):
+        assert  step >= 0
+        assert type(ipt_list) == list
+        assert  type(start_person) == str
 
+        self.__list = ipt_list.copy()
+        self.__step = step
+        self.__start_person = start_person
+        self.death_list = []
 
+        ################检查起始位置是否在列表中
+        self.__pointer = -1
+        for x in self.__list:
+            if x.name == self.__start_person:
+                self.__pointer = self.__list.index(x)       #若在列表中找到,则将pointer设置为起始值的索引
+                print('\033[0;32;40m\t start person founded \033[0m')
 
+        if self.__pointer == -1:
+            self.__pointer = 0  # 若列表中没有找到输入的起始值，则将pointer置为0
+            print('\033[0;31;40m\t start person not founded, the start person has been set to the first one \033[0m')
+        #################
     def __iter__(self):
-
-        return
+        return self
 
     def __next__(self):
+        # if self.__rem > 0:
+        if len(self.__list) > 0:
+            self.__pointer = (self.__pointer - 1 + self.__step) % len(self.__list)      #迭代公式，对索引进行运算
 
-        return
+            self.death_list.append(self.__list[self.__pointer])     #
+            del self.__list[self.__pointer]
+
+
+        else:
+            raise  StopIteration
+        return self.death_list[len(self.death_list)-1]   #返回死亡名单中的最新一个对象
 
 if __name__ == '__main__':
-    #调用不同的Reader进行文件读取
-    # list = ExcelReader(excel_fdir).read_excel()
-    list = CsvReader(csv_fdir).read_csv()
-    # list = ZipReader(zip_fdir).read_zip()
+    '''调用不同的Reader进行文件读取'''
+    # obj = Reader.ExcelReader(EXCELPATH)
+    obj = Reader.CsvReader(CSVPATH)
+    # obj = Reader.ZipReader(file_dir = ZIPPATH, target_file = ZIP_TARGET_FILE)
+    list_ = obj.read()
 
-    #文件读取结果打印
-    for x in list:
+    '''文件读取结果打印'''
+    for x in list_:
         print("name:",x.name,"id:",x.id)
 
-#josephus排序并打印
-    DeathList = get_death_order(list,step,BeginPerson)
-    print('\033[0;32;40m\t the death order is: \033[0m')
-    for y in DeathList:
-        print("name:",y.name,"id:",y.id)
+    '''josephus排序并打印结果(使用函数）'''
+    # death_list = get_death_order(list,STEP,begin_person)
+    # print('\033[0;32;40m\t the josephus death order is: \033[0m')
+    # for y in death_list:
+    #     print("name:", y.name, "id:", y.id)
+
+    '''josephus排序并打印结果（使用迭代器类）'''
+    JS_interable_obj = JosephusRing(list_,STEP,begin_person) #建立可迭代对象，自身就是迭代器
+    print('\033[0;32;40m\t the josephus death order is: \033[0m')
+    for i in JS_interable_obj:
+        print("name:",i.name,"id:",i.id)
