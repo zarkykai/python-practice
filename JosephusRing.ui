@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>JsDialog</class>
+ <widget class="QDialog" name="JsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>JosephusRing</string>
+  </property>
+  <widget class="QPushButton" name="close_pushButton">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>530</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>520</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="input_list_lable">
+      <property name="text">
+       <string>input list</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="death_list_lable">
+      <property name="text">
+       <string>death list</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QTextBrowser" name="ipt_list_textBrowser"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QTextBrowser" name="death_list_textBrowser"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>430</y>
+     <width>198</width>
+     <height>82</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="step_label">
+        <property name="text">
+         <string>步长</string>
+        </property>
+        <property name="buddy">
+         <cstring>step_lineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="step_lineEdit"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="start_person_label">
+        <property name="text">
+         <string>初始值</string>
+        </property>
+        <property name="buddy">
+         <cstring>start_person_lineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="start_person_lineEdit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="start_process_Button">
+      <property name="text">
+       <string>启动</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>430</y>
+     <width>216</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="name_input_lable">
+      <property name="text">
+       <string>姓名</string>
+      </property>
+      <property name="buddy">
+       <cstring>name_lineEdit</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="name_lineEdit"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="id_input_lable">
+      <property name="text">
+       <string>学号</string>
+      </property>
+      <property name="buddy">
+       <cstring>id_lineEdit</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="id_lineEdit"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="choose_file_pushButton">
+      <property name="text">
+       <string>选择文件</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="manual_input_pushButton">
+      <property name="text">
+       <string>确定</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>close_pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>JsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>697</x>
+     <y>541</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

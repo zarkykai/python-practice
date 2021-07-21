@@ -1,5 +1,8 @@
 # find josephus out of n people when kill one out of every q people
+
 import josephus.src.Reader       # 文件读取方法存储在自定义的Reader模块中
+
+
 
 ZIPPATH = 'ADcarry.zip'
 ZIP_TARGET_FILE = 'ADcarry/ADcarry.csv'

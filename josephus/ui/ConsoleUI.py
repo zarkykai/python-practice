@@ -1,18 +1,12 @@
 from josephus.src.josephus import JosephusRing
 from josephus.src.Reader import ExcelReader, CsvReader
 from josephus.src.Person import Person
-from PyQt5.QtWidgets import *
+# from PyQt5.QtWidgets import *
 import os
-# import tkinter as tk
-# from tkinter import filedialog
-#
-# root = tk.Tk()
-# root.withdraw()
 
 
-class JosephusUI():
+class JosephusUI:
     def __init__(self):
-        # super(JosephusUI, self).__init__()
         self.__file_name = ''
         self.__list = []
         self.__step = 0
@@ -42,7 +36,7 @@ class JosephusUI():
         # self.__file_name = filedialog.askopenfilename()
 
         print(os.listdir('../test/ADcarry2'))
-        print(self.cwd)
+
         file_name = input('请选择要打开的文件（请直接将上面的文件名复制下来使用）：')
         self.__file_name = '../test/ADcarry2' + '/' + file_name
         # 此处应添加assert限制所选文件类型

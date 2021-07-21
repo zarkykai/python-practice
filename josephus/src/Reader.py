@@ -41,6 +41,7 @@ class ExcelReader(Reader):
 
         for row in ws.iter_rows():  # 循环读取每一行
             a = Person(name=row[0].value, id=row[1].value)  # 每一行的第一列为名字，第二列为学号，创建对象进行存储
+            a = Person.Person(name=row[0].value, id=row[1].value)  # 每一行的第一列为名字，第二列为学号，创建对象进行存储
             list_.append(a)
 
         self.clean_blank(list_)
@@ -60,6 +61,7 @@ class CsvReader(Reader):
 
             for row in f_csv:  # 循环读取每行
                 a = Person(name=row[0], id=row[1])  # 创建对象存储数据
+                a = Person.Person(name=row[0], id=row[1])  # 创建对象存储数据
                 list_.append(a)
 
         self.clean_blank(list_)
