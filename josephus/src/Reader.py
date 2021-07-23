@@ -61,7 +61,7 @@ class CsvReader(Reader):
 
             for row in f_csv:  # 循环读取每行
                 a = Person(name=row[0], id=row[1])  # 创建对象存储数据
-                a = Person.Person(name=row[0], id=row[1])  # 创建对象存储数据
+                a = Person(name=row[0], id=row[1])  # 创建对象存储数据
                 list_.append(a)
 
         self.clean_blank(list_)

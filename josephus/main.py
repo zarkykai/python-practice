@@ -63,7 +63,7 @@ if __name__ == '__main__':
     print('请选择使用控制台界面or图形界面')
     bool_ = input('1、控制台界面\n2、图形界面\n')
     if bool_ == '1':
-        ui = ConsoleUI.JSUI()
+        ui = JosephusUI()
     elif bool_ == '2':
         app = QApplication([])
         # 初始化
